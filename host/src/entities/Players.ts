@@ -13,11 +13,16 @@ export class Player {
   moveSpeed = 0.01;
   maxSpeed = 3.5;
 
-  jumpForce = 13;
+  // salto más bajo
+  jumpForce = 11;
 
   isGrounded = false;
 
-  constructor(x: number, y: number) {
+  constructor(
+    x: number,
+    y: number,
+    color = "#ff4d4d"
+  ) {
 
     this.body = Matter.Bodies.rectangle(
       x,
@@ -35,47 +40,36 @@ export class Player {
 
     this.sprite = new Graphics();
 
-    this.sprite.rect(
+    // cuerpo
+    this.sprite.roundRect(
       -this.width / 2,
       -this.height / 2,
       this.width,
-      this.height
+      this.height,
+      10
     );
 
-    this.sprite.fill("#ff4d4d");
+    this.sprite.fill(color);
+
+    // ojos
+    this.sprite.circle(-10, -5, 4);
+    this.sprite.circle(10, -5, 4);
+
+    this.sprite.fill("#ffffff");
+
+    // pupilas
+    this.sprite.circle(-10, -5, 2);
+    this.sprite.circle(10, -5, 2);
+
+    this.sprite.fill("#000000");
+
+    // boca
+    this.sprite.roundRect(-8, 10, 16, 4, 2);
+
+    this.sprite.fill("#000000");
   }
 
-  moveLeft(otherPlayer?: Player) {
-
-    if (otherPlayer) {
-
-      const collision = Matter.Collision.collides(
-        this.body,
-        otherPlayer.body
-      );
-
-      if (collision) {
-
-        const verticalDifference =
-          Math.abs(
-            this.body.position.y -
-            otherPlayer.body.position.y
-          );
-
-        // solo bloquea movimiento lateral
-        // si están a la misma altura
-        if (verticalDifference < this.height * 0.5) {
-
-          // player está a la derecha del otro
-          if (
-            this.body.position.x >
-            otherPlayer.body.position.x
-          ) {
-            return;
-          }
-        }
-      }
-    }
+  moveLeft() {
 
     if (this.body.velocity.x > -this.maxSpeed) {
 
@@ -90,37 +84,7 @@ export class Player {
     }
   }
 
-  moveRight(otherPlayer?: Player) {
-
-    if (otherPlayer) {
-
-      const collision = Matter.Collision.collides(
-        this.body,
-        otherPlayer.body
-      );
-
-      if (collision) {
-
-        const verticalDifference =
-          Math.abs(
-            this.body.position.y -
-            otherPlayer.body.position.y
-          );
-
-        // solo bloquea si están
-        // uno al lado del otro
-        if (verticalDifference < this.height * 0.5) {
-
-          // player está a la izquierda
-          if (
-            this.body.position.x <
-            otherPlayer.body.position.x
-          ) {
-            return;
-          }
-        }
-      }
-    }
+  moveRight() {
 
     if (this.body.velocity.x < this.maxSpeed) {
 
@@ -157,22 +121,20 @@ export class Player {
 
   checkGround() {
 
-    this.isGrounded = Math.abs(this.body.velocity.y) < 0.1;
+    this.isGrounded =
+      Math.abs(this.body.velocity.y) < 0.1;
   }
 
-  update(
-    keys: Record<string, boolean>,
-    otherPlayer?: Player
-  ) {
+  update(keys: Record<string, boolean>) {
 
     this.checkGround();
 
     if (keys["a"]) {
-      this.moveLeft(otherPlayer);
+      this.moveLeft();
     }
 
     if (keys["d"]) {
-      this.moveRight(otherPlayer);
+      this.moveRight();
     }
 
     if (!keys["a"] && !keys["d"]) {

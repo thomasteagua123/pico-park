@@ -30,7 +30,7 @@ export function createLevel1() {
     80
   );
 
-  groundGraphic.fill("#ffffff");
+  groundGraphic.fill("#43a047");
 
   groundGraphic.x = ground.position.x;
   groundGraphic.y = ground.position.y;
@@ -38,34 +38,59 @@ export function createLevel1() {
   bodies.push(ground);
   graphics.push(groundGraphic);
 
-  // ===== PLATAFORMA =====
+  // ===== PLATAFORMA IZQUIERDA =====
 
-  const platform = Matter.Bodies.rectangle(
-    screenWidth - 200,
-    screenHeight - 250,
-    250,
+  const leftPlatform = Matter.Bodies.rectangle(
+    180,
+    screenHeight - 220,
+    180,
     40,
     {
       isStatic: true
     }
   );
 
-  const platformGraphic = new Graphics();
+  const leftPlatformGraphic = new Graphics();
 
-  platformGraphic.rect(-125, -20, 250, 40);
+  leftPlatformGraphic.rect(-90, -20, 180, 40);
 
-  platformGraphic.fill("#ffffff");
+  leftPlatformGraphic.fill("#f5f5f5");
 
-  platformGraphic.x = platform.position.x;
-  platformGraphic.y = platform.position.y;
+  leftPlatformGraphic.x = leftPlatform.position.x;
+  leftPlatformGraphic.y = leftPlatform.position.y;
 
-  bodies.push(platform);
-  graphics.push(platformGraphic);
+  bodies.push(leftPlatform);
+  graphics.push(leftPlatformGraphic);
+
+  // ===== PLATAFORMA DERECHA =====
+
+  const rightPlatform = Matter.Bodies.rectangle(
+  screenWidth - 180,
+  screenHeight - 290,
+  180,
+  40,
+  {
+    isStatic: true
+  }
+);
+
+
+  const rightPlatformGraphic = new Graphics();
+
+  rightPlatformGraphic.rect(-90, -20, 180, 40);
+
+  rightPlatformGraphic.fill("#f5f5f5");
+
+  rightPlatformGraphic.x = rightPlatform.position.x;
+  rightPlatformGraphic.y = rightPlatform.position.y;
+
+  bodies.push(rightPlatform);
+  graphics.push(rightPlatformGraphic);
 
   // ===== CAJA =====
 
   const box = Matter.Bodies.rectangle(
-    350,
+    screenWidth / 2,
     screenHeight - 120,
     80,
     80,
@@ -80,7 +105,7 @@ export function createLevel1() {
 
   boxGraphic.rect(-40, -40, 80, 80);
 
-  boxGraphic.fill("#4d9cff");
+  boxGraphic.fill("#8d6e63");
 
   boxGraphic.x = box.position.x;
   boxGraphic.y = box.position.y;
@@ -97,8 +122,9 @@ export function createLevel1() {
 
   key.fill("#ffd54a");
 
-  key.x = screenWidth - 200;
-  key.y = screenHeight - 320;
+  key.x = screenWidth - 180;
+  key.y = screenHeight - 360;
+
 
   // ===== PUERTA =====
 

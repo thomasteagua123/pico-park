@@ -1,3 +1,6 @@
+import "./server/socket"
+import {mobileInputs} from "./server/socket"
+
 import Matter from "matter-js";
 import { createLevel2 } from "./levels/level2";
 
@@ -6,6 +9,7 @@ import { engine } from "./engine/physics";
 
 import { Player } from "./entities/Players";
 import { createLevel1 } from "./levels/level1";
+import { server } from "typescript";
 
 const player1 = new Player(200, 200);
 const player2 = new Player(350, 200);
@@ -212,11 +216,18 @@ if (gameWon && doorOpenProgress < 60) {
 }
 
   // ===== PLAYER 1 =====
+if (mobileInputs.jump) {
+
+  player1.jump();
+
+  mobileInputs.jump = false;
+}
 
   player1.update({
-    a: keys["a"],
-    d: keys["d"]
-  });
+  a: keys["a"] || mobileInputs.left,
+  d: keys["d"] || mobileInputs.right
+});
+
 
   // ===== PLAYER 2 =====
 
@@ -311,9 +322,14 @@ app.stage.addChild(player2.sprite);
     player2InsideDoor = false;
 
     playerHasKey = false;
-    gameWon = false;
+gameWon = false;
 
-    level.key.visible = true;
+doorOpenProgress = 0;
+
+level.door.scale.y = 1;
+
+level.key.visible = true;
+
 
     // reset posiciones
     Matter.Body.setPosition(player1.body, {
@@ -339,6 +355,8 @@ app.stage.addChild(player2.sprite);
     // agregar sprites
     app.stage.addChild(player1.sprite);
     app.stage.addChild(player2.sprite);
+    level.door.scale.y = 1;
+
 
     for (const graphic of level.graphics) {
       app.stage.addChild(graphic);
