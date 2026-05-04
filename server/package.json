@@ -1,0 +1,17 @@
+{
+  "name": "pico-park",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "expo": "^55.0.19",
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3"
+  }
+}
