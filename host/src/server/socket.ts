@@ -7,10 +7,11 @@ export const mobileInputs = {
 };
 
 const wss = new WebSocketServer({
+  host: "0.0.0.0",
   port: 3000
 });
 
-console.log("WS SERVER -> ws://localhost:3000");
+console.log("WS SERVER READY");
 
 wss.on("connection", (ws) => {
 
