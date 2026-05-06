@@ -1,34 +1,15 @@
-import "./server/socket"
-import {mobileInputs} from "./server/socket"
-
 import Matter from "matter-js";
-import { createLevel2 } from "./levels/level2";
 
 import { app } from "./engine/renderer";
 import { engine } from "./engine/physics";
 
 import { Player } from "./entities/Players";
+
 import { createLevel1 } from "./levels/level1";
-import { server } from "typescript";
 
-const player1 = new Player(200, 200);
-const player2 = new Player(350, 200);
-
-player2.sprite.tint = 0x4d9cff;
-
-let currentLevel = 1;
+// ===== LEVEL =====
 
 let level = createLevel1();
-
-
-Matter.Composite.add(engine.world, [
-  player1.body,
-  player2.body,
-  ...level.bodies
-]);
-
-app.stage.addChild(player1.sprite);
-app.stage.addChild(player2.sprite);
 
 for (const graphic of level.graphics) {
   app.stage.addChild(graphic);
@@ -37,347 +18,178 @@ for (const graphic of level.graphics) {
 app.stage.addChild(level.key);
 app.stage.addChild(level.door);
 
-let playerHasKey = false;
-let gameWon = false;
+Matter.Composite.add(engine.world, [...level.bodies]);
 
+// ===== PLAYERS =====
+
+let player1: Player | null = null;
+let player2: Player | null = null;
+
+// ===== INPUTS =====
+
+const player1Inputs = {
+  left: false,
+  right: false,
+  jump: false,
+};
+
+const player2Inputs = {
+  left: false,
+  right: false,
+  jump: false,
+};
+
+// ===== SOCKET =====
+
+const socket = new WebSocket("ws://192.168.1.3:3000");
+
+socket.onopen = () => {
+  console.log("HOST CONECTADO");
+};
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+
+  console.log("HOST RECIBE", data);
+
+  // ===== CREAR PLAYER 1 =====
+
+  if (
+    data.type === "player-connected" &&
+    Number(data.playerId) === 1 &&
+    !player1
+  ) {
+    console.log("CREANDO PLAYER 1");
+
+    player1 = new Player(
+      app.screen.width / 2 - 50,
+      app.screen.height / 2,
+      "#ff4d4d"
+    );
+
+    Matter.Composite.add(engine.world, [player1.body]);
+
+    app.stage.addChild(player1.sprite);
+
+    console.log("PLAYER 1 CREADO", player1);
+
+    return;
+  }
+
+  // ===== CREAR PLAYER 2 =====
+
+  if (
+    data.type === "player-connected" &&
+    Number(data.playerId) === 2 &&
+    !player2
+  ) {
+    console.log("CREANDO PLAYER 2");
+
+    player2 = new Player(
+      app.screen.width / 2 + 50,
+      app.screen.height / 2,
+      "#4d9cff"
+    );
+
+    Matter.Composite.add(engine.world, [player2.body]);
+
+    app.stage.addChild(player2.sprite);
+
+    console.log("PLAYER 2 CREADO", player2);
+
+    return;
+  }
+
+  // ===== INPUTS PLAYER 1 =====
+
+  if (data.playerId === 1) {
+    player1Inputs.left = data.left ?? false;
+    player1Inputs.right = data.right ?? false;
+    player1Inputs.jump = data.jump ?? false;
+  }
+
+  // ===== INPUTS PLAYER 2 =====
+
+  if (data.playerId === 2) {
+    player2Inputs.left = data.left ?? false;
+    player2Inputs.right = data.right ?? false;
+    player2Inputs.jump = data.jump ?? false;
+  }
+};
+
+// ===== KEYBOARD =====
 
 const keys: Record<string, boolean> = {};
 
 window.addEventListener("keydown", (e) => {
-
   keys[e.key] = true;
-
-  // ===== PLAYER 1 =====
-
-  if (e.key === "w") {
-
-    const distanceToKey = Math.hypot(
-      player1.body.position.x - level.key.x,
-      player1.body.position.y - level.key.y
-    );
-
-    const distanceToDoor = Math.hypot(
-      player1.body.position.x - level.door.x,
-      player1.body.position.y - level.door.y
-    );
-
-    // ===== ENTRAR A LA PUERTA =====
-
-    if (
-      gameWon &&
-      distanceToDoor < 120
-    ) {
-
-      player1InsideDoor = true;
-
-      player1.sprite.visible = false;
-
-      Matter.Body.setPosition(player1.body, {
-        x: -9999,
-        y: -9999
-      });
-
-      return;
-    }
-
-    // ===== AGARRAR LLAVE =====
-
-    if (
-      distanceToKey < 80 &&
-      !playerHasKey
-    ) {
-
-      playerHasKey = true;
-
-      level.key.visible = false;
-
-      return;
-    }
-
-    // ===== ABRIR PUERTA =====
-
-    if (
-      distanceToDoor < 120 &&
-      playerHasKey
-    ) {
-
-      gameWon = true;
-
-      return;
-    }
-
-    // ===== SALTO =====
-
-    player1.jump();
-  }
-
-  // ===== PLAYER 2 =====
-
-  if (e.key === "ArrowUp") {
-
-    const distanceToKey = Math.hypot(
-      player2.body.position.x - level.key.x,
-      player2.body.position.y - level.key.y
-    );
-
-    const distanceToDoor = Math.hypot(
-      player2.body.position.x - level.door.x,
-      player2.body.position.y - level.door.y
-    );
-
-    // ===== ENTRAR A LA PUERTA =====
-
-    if (
-      gameWon &&
-      distanceToDoor < 120
-    ) {
-
-      player2InsideDoor = true;
-
-      player2.sprite.visible = false;
-
-      Matter.Body.setPosition(player2.body, {
-        x: -9999,
-        y: -9999
-      });
-
-      return;
-    }
-
-    // ===== AGARRAR LLAVE =====
-
-    if (
-      distanceToKey < 80 &&
-      !playerHasKey
-    ) {
-
-      playerHasKey = true;
-
-      level.key.visible = false;
-
-      return;
-    }
-
-    // ===== ABRIR PUERTA =====
-
-    if (
-      distanceToDoor < 120 &&
-      playerHasKey
-    ) {
-
-      gameWon = true;
-
-      return;
-    }
-
-    // ===== SALTO =====
-
-    player2.jump();
-  }
 });
 
-
 window.addEventListener("keyup", (e) => {
-
   keys[e.key] = false;
 });
 
-let player1InsideDoor = false;
-let player2InsideDoor = false;
-
-let doorOpenProgress = 0;
-
+// ===== LOOP =====
 
 app.ticker.add(() => {
 
-  // ===== POSICIONES ANTERIORES =====
-
-  const player1PreviousPosition = {
-    x: player1.body.position.x,
-    y: player1.body.position.y
-  };
-
-  const player2PreviousPosition = {
-    x: player2.body.position.x,
-    y: player2.body.position.y
-  };
-
   Matter.Engine.update(engine, 1000 / 60);
-  // ===== ANIMACIÓN PUERTA =====
-
-if (gameWon && doorOpenProgress < 60) {
-
-  doorOpenProgress += 2;
-
-  level.door.scale.y =
-    1 - doorOpenProgress / 100;
-
-  level.door.y += 1;
-}
 
   // ===== PLAYER 1 =====
-if (mobileInputs.jump) {
 
-  player1.jump();
+  if (player1) {
 
-  mobileInputs.jump = false;
-}
+    if (player1Inputs.jump) {
+      player1.jump();
+      player1Inputs.jump = false;
+    }
 
-  player1.update({
-  a: keys["a"] || mobileInputs.left,
-  d: keys["d"] || mobileInputs.right
-});
-
+    player1.update({
+      left: keys["a"] || player1Inputs.left,
+      right: keys["d"] || player1Inputs.right,
+    });
+  }
 
   // ===== PLAYER 2 =====
 
-  player2.update({
-    a: keys["ArrowLeft"],
-    d: keys["ArrowRight"]
-  });
+  if (player2) {
 
-  // ===== COLISIÓN ENTRE PLAYERS =====
+    if (player2Inputs.jump) {
+      player2.jump();
+      player2Inputs.jump = false;
+    }
 
-  const collision = Matter.Collision.collides(
-    player1.body,
-    player2.body
-  );
+    player2.update({
+      left: keys["ArrowLeft"] || player2Inputs.left,
+      right: keys["ArrowRight"] || player2Inputs.right,
+    });
+  }
 
-  if (collision) {
+  // ===== COLISIÓN ENTRE JUGADORES =====
 
-    const overlapX =
-      collision.penetration.x;
+  if (player1 && player2) {
 
-    const overlapY =
-      collision.penetration.y;
+    const collision = Matter.Collision.collides(
+      player1.body,
+      player2.body
+    );
 
-    // SOLO bloquear empuje horizontal
-    if (Math.abs(overlapX) > Math.abs(overlapY)) {
+    if (collision) {
 
-      Matter.Body.setPosition(
-        player1.body,
-        {
-          x: player1PreviousPosition.x,
-          y: player1.body.position.y
-        }
-      );
+      Matter.Body.setVelocity(player1.body, {
+        x: 0,
+        y: player1.body.velocity.y
+      });
 
-      Matter.Body.setPosition(
-        player2.body,
-        {
-          x: player2PreviousPosition.x,
-          y: player2.body.position.y
-        }
-      );
-
-      Matter.Body.setVelocity(
-        player1.body,
-        {
-          x: 0,
-          y: player1.body.velocity.y
-        }
-      );
-
-      Matter.Body.setVelocity(
-        player2.body,
-        {
-          x: 0,
-          y: player2.body.velocity.y
-        }
-      );
+      Matter.Body.setVelocity(player2.body, {
+        x: 0,
+        y: player2.body.velocity.y
+      });
     }
   }
 
-  // ===== CAJA =====
+  // ===== BOX =====
 
   level.boxGraphic.x = level.box.position.x;
   level.boxGraphic.y = level.box.position.y;
-  // ===== PASAR NIVEL =====
-
-if (
-  player1InsideDoor &&
-  player2InsideDoor
-) {
-
-  // ===== IR AL NIVEL 2 =====
-
-  if (currentLevel === 1) {
-
-    currentLevel = 2;
-
-    // limpiar mundo
-    Matter.Composite.clear(engine.world, false);
-
-
-    // limpiar stage
-    app.stage.removeChildren();
-app.stage.addChild(player1.sprite);
-app.stage.addChild(player2.sprite);
-
-    // crear nivel 2
-    level = createLevel2();
-
-    // reset players
-    player1InsideDoor = false;
-    player2InsideDoor = false;
-
-    playerHasKey = false;
-gameWon = false;
-
-doorOpenProgress = 0;
-
-level.door.scale.y = 1;
-
-level.key.visible = true;
-
-
-    // reset posiciones
-    Matter.Body.setPosition(player1.body, {
-      x: 200,
-      y: 200
-    });
-
-    Matter.Body.setPosition(player2.body, {
-      x: 350,
-      y: 200
-    });
-
-    player1.sprite.visible = true;
-    player2.sprite.visible = true;
-
-    // agregar mundo
-    Matter.Composite.add(engine.world, [
-      player1.body,
-      player2.body,
-      ...level.bodies
-    ]);
-
-    // agregar sprites
-    app.stage.addChild(player1.sprite);
-    app.stage.addChild(player2.sprite);
-    level.door.scale.y = 1;
-
-
-    for (const graphic of level.graphics) {
-      app.stage.addChild(graphic);
-    }
-
-    app.stage.addChild(level.key);
-    app.stage.addChild(level.door);
-  }
-
-  // ===== TERMINAR JUEGO =====
-
-  else {
-
-    if (!document.body.dataset.finished) {
-
-      document.body.dataset.finished = "true";
-
-      alert("TERMINASTE EL JUEGO");
-    }
-  }
-}
-
 });
-
