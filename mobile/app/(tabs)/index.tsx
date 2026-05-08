@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+
 import {
   PanResponder,
   StyleSheet,
@@ -113,14 +114,14 @@ export default function Index() {
         <View style={styles.connectBox}>
           <Text style={styles.label}>IP DEL HOST</Text>
           <TextInput
-            placeholder="192.168.x.x"
+            placeholder="Pone tu ip para conectarte"
             placeholderTextColor="#444"
             value={ip}
             onChangeText={setIp}
             style={styles.input}
             keyboardType="numbers-and-punctuation"
           />
-          <Pressable style={styles.connectButton} onPress={connect}>
+          <Pressable style={styles.connectButton} onPressIn={connect}>
             <Text style={styles.connectButtonText}>CONECTAR</Text>
           </Pressable>
         </View>

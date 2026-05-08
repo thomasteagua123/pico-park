@@ -1,5 +1,14 @@
 {
   "compilerOptions": {
-    "types": ["matter-js"]
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
+
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    "types": ["bun-types"],
+
+    "strict": true,
+    "skipLibCheck": true
   }
 }
