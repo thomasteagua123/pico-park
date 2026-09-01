@@ -1,0 +1,30 @@
+{
+  "name": "gamepad",
+  "version": "1.0.0",
+  "main": "index.tsx",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "dev": "expo start -c"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^15.0.2",
+    "expo": "~55.0.0",
+    "expo-build-properties": "~55.0.13",
+    "expo-camera": "~55.0.16",
+    "expo-keep-awake": "~55.0.6",
+    "expo-screen-orientation": "~55.0.13",
+    "expo-status-bar": "~55.0.5",
+    "react": "19.2.0",
+    "react-native": "0.83.6",
+    "react-native-safe-area-context": "~5.6.2",
+    "socket.io-client": "^4.8.3"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/react": "~19.2.10",
+    "typescript": "~5.9.2"
+  }
+}
