@@ -1,16 +1,16 @@
 import React from "react";
 import {
+  GestureResponderEvent,
+  LayoutChangeEvent,
   StyleSheet,
   View,
-  LayoutChangeEvent,
-  GestureResponderEvent,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import BotonDeAccion from "../contenidos/BotonDeAccion";
 import BotonParaSalir from "../contenidos/BotonParaSalir";
 import DPadDeMovimiento from "../contenidos/DPadDeMovimiento";
 import IndicadorDeConexion from "../contenidos/IndicadorDeConexion";
-import { COLORES } from "../../constantes/colores";
 
 type Props = {
   onSalir: () => void;
@@ -32,52 +32,66 @@ const ContenedorDeGamepad = ({
   onCapturarLayoutDerecha,
   onCapturarLayoutSalto,
   onProcesarToques,
-}: Props) => (
-  <SafeAreaView style={estilos.contenedor}>
-    <View style={estilos.barraSuperior}>
-      <IndicadorDeConexion />
-      <BotonParaSalir onSalir={onSalir} />
-    </View>
-    <View
-      style={estilos.zonaDeControles}
-      onTouchStart={onProcesarToques}
-      onTouchMove={onProcesarToques}
-      onTouchEnd={onProcesarToques}
-      onTouchCancel={onProcesarToques}
-    >
-      <View style={estilos.capaVisual} pointerEvents="none">
-        <DPadDeMovimiento
-          onCapturarLayout={onCapturarLayoutDpad}
-          onCapturarLayoutArriba={onCapturarLayoutArriba}
-          onCapturarLayoutAbajo={onCapturarLayoutAbajo}
-          onCapturarLayoutIzquierda={onCapturarLayoutIzquierda}
-          onCapturarLayoutDerecha={onCapturarLayoutDerecha}
-        />
-        <BotonDeAccion onCapturarLayout={onCapturarLayoutSalto} />
+}: Props) => {
+  return (
+    <SafeAreaView style={estilos.pantalla}>
+      <View style={estilos.encabezado}>
+        <IndicadorDeConexion />
+        <BotonParaSalir onSalir={onSalir} />
       </View>
-    </View>
-  </SafeAreaView>
-);
+
+      <View
+        style={estilos.areaGamepad}
+        onTouchStart={onProcesarToques}
+        onTouchMove={onProcesarToques}
+        onTouchEnd={onProcesarToques}
+        onTouchCancel={onProcesarToques}
+      >
+        <View style={estilos.controles} pointerEvents="none">
+          <DPadDeMovimiento
+            onCapturarLayout={onCapturarLayoutDpad}
+            onCapturarLayoutArriba={onCapturarLayoutArriba}
+            onCapturarLayoutAbajo={onCapturarLayoutAbajo}
+            onCapturarLayoutIzquierda={onCapturarLayoutIzquierda}
+            onCapturarLayoutDerecha={onCapturarLayoutDerecha}
+          />
+
+          <BotonDeAccion onCapturarLayout={onCapturarLayoutSalto} />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 const estilos = StyleSheet.create({
-  contenedor: { flex: 1, backgroundColor: COLORES.FONDO_PRINCIPAL },
-  barraSuperior: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    height: 50,
-    zIndex: 10,
+  pantalla: {
+    flex: 1,
+    backgroundColor: "#F4F6F8",
   },
-  zonaDeControles: { flex: 1, position: "relative" },
-  capaVisual: {
-    ...StyleSheet.absoluteFill,
+
+  encabezado: {
+    height: 64,
+    paddingHorizontal: 24,
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 60,
-    paddingBottom: 20,
+    justifyContent: "space-between",
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E3E7EB",
+  },
+
+  areaGamepad: {
+    flex: 1,
+    position: "relative",
+  },
+
+  controles: {
+    ...StyleSheet.absoluteFillObject,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 45,
+    paddingBottom: 10,
   },
 });
 

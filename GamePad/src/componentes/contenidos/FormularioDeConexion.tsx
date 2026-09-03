@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { COLORES } from "../../constantes/colores";
 
 type Props = {
   direccionIp: string;
@@ -20,79 +19,158 @@ const FormularioDeConexion = ({
   onCambiarIp,
   onConectarConIp,
   onAbrirEscanerQR,
-}: Props) => (
-  <View style={estilos.contenedor}>
-    <Text style={estilos.titulo}>Vincular GamePad</Text>
-    <View style={estilos.filaInput}>
-      <TextInput
-        style={estilos.inputIp}
-        placeholder="Coloca la IP (Ej: 192.168.1.39:3000)"
-        placeholderTextColor={COLORES.TEXTO_PLACEHOLDER}
-        value={direccionIp}
-        onChangeText={onCambiarIp}
-        keyboardType="default"
-      />
-      <TouchableOpacity
-        style={estilos.botonConectarConIp}
-        onPress={onConectarConIp}
-      >
-        <Text style={estilos.textoDeBoton}>Vincular con IP</Text>
-      </TouchableOpacity>
+}: Props) => {
+  return (
+    <View style={estilos.pantalla}>
+      <View style={estilos.tarjeta}>
+        <Text style={estilos.titulo}>Vincular GamePad</Text>
+
+        <Text style={estilos.descripcion}>
+          Conectá el control con la dirección IP del servidor
+        </Text>
+
+        <TextInput
+          style={estilos.input}
+          placeholder="192.168.1.39:3000"
+          placeholderTextColor="#9CA3AF"
+          value={direccionIp}
+          onChangeText={onCambiarIp}
+          keyboardType="default"
+          autoCapitalize="none"
+        />
+
+        <TouchableOpacity
+          style={estilos.botonPrincipal}
+          onPress={onConectarConIp}
+          activeOpacity={0.8}
+        >
+          <Text style={estilos.textoPrincipal}>
+            Vincular con IP
+          </Text>
+        </TouchableOpacity>
+
+        <View style={estilos.separador}>
+          <View style={estilos.linea} />
+          <Text style={estilos.o}>o</Text>
+          <View style={estilos.linea} />
+        </View>
+
+        <TouchableOpacity
+          style={estilos.botonSecundario}
+          onPress={onAbrirEscanerQR}
+          activeOpacity={0.8}
+        >
+          <Text style={estilos.textoSecundario}>
+            Escanear código QR
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
-    <TouchableOpacity
-      style={estilos.botonConectarConQR}
-      onPress={onAbrirEscanerQR}
-    >
-      <Text style={estilos.textoDeBoton}>Vincular con QR</Text>
-    </TouchableOpacity>
-  </View>
-);
+  );
+};
 
 const estilos = StyleSheet.create({
-  contenedor: {
+  pantalla: {
     flex: 1,
-    backgroundColor: COLORES.FONDO_FORMULARIO,
+    backgroundColor: "#F4F6F8",
     justifyContent: "center",
     alignItems: "center",
+    padding: 24,
   },
+
+  tarjeta: {
+    width: "100%",
+    maxWidth: 520,
+    padding: 32,
+    borderRadius: 22,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+
   titulo: {
-    fontSize: 24,
-    color: COLORES.TEXTO_CLARO,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  filaInput: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-    gap: 10,
-  },
-  inputIp: {
-    backgroundColor: COLORES.INPUT_FONDO,
-    color: COLORES.TEXTO_CLARO,
-    width: 400,
-    padding: 15,
-    borderRadius: 8,
-    fontSize: 16,
+    color: "#111827",
+    fontSize: 28,
+    fontWeight: "800",
     textAlign: "center",
   },
-  botonConectarConIp: {
-    backgroundColor: COLORES.CONECTAR_IP,
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 8,
+
+  descripcion: {
+    marginTop: 8,
+    marginBottom: 28,
+    color: "#6B7280",
+    fontSize: 15,
+    textAlign: "center",
   },
-  botonConectarConQR: {
-    backgroundColor: COLORES.CONECTAR_QR,
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 8,
-    marginTop: 12,
+
+  input: {
+    height: 54,
+    width: "100%",
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "#F9FAFB",
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    color: "#111827",
+    fontSize: 16,
   },
-  textoDeBoton: {
-    color: COLORES.TEXTO_CLARO,
-    fontSize: 18,
-    fontWeight: "bold",
+
+  botonPrincipal: {
+    marginTop: 14,
+    height: 54,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#2563EB",
+  },
+
+  textoPrincipal: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+
+  separador: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 22,
+  },
+
+  linea: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#E5E7EB",
+  },
+
+  o: {
+    marginHorizontal: 12,
+    color: "#9CA3AF",
+    fontSize: 14,
+  },
+
+  botonSecundario: {
+    height: 54,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#EFF6FF",
+    borderWidth: 1,
+    borderColor: "#BFDBFE",
+  },
+
+  textoSecundario: {
+    color: "#2563EB",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });
 

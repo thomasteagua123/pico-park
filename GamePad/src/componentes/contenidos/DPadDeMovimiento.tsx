@@ -1,7 +1,10 @@
 import { Feather } from "@expo/vector-icons";
 import React from "react";
-import { LayoutChangeEvent, StyleSheet, View } from "react-native";
-import { COLORES } from "../../constantes/colores";
+import {
+  LayoutChangeEvent,
+  StyleSheet,
+  View,
+} from "react-native";
 
 type Props = {
   onCapturarLayout: (evento: LayoutChangeEvent) => void;
@@ -17,46 +20,95 @@ const DPadDeMovimiento = ({
   onCapturarLayoutAbajo,
   onCapturarLayoutIzquierda,
   onCapturarLayoutDerecha,
-}: Props) => (
-  <View style={estilos.contenedor} onLayout={onCapturarLayout}>
-    <View style={estilos.fila}>
-      <View style={estilos.botonDireccion} onLayout={onCapturarLayoutArriba}>
-        <Feather name="chevron-up" size={42} color={COLORES.TEXTO_CLARO} />
+}: Props) => {
+  return (
+    <View style={estilos.dpad} onLayout={onCapturarLayout}>
+      <View style={estilos.filaSuperior}>
+        <View
+          style={estilos.botonDireccion}
+          onLayout={onCapturarLayoutArriba}
+        >
+          <Feather name="chevron-up" size={34} color="#1F2937" />
+        </View>
+      </View>
+
+      <View style={estilos.filaCentral}>
+        <View
+          style={estilos.botonDireccion}
+          onLayout={onCapturarLayoutIzquierda}
+        >
+          <Feather name="chevron-left" size={34} color="#1F2937" />
+        </View>
+
+        <View style={estilos.centro} />
+
+        <View
+          style={estilos.botonDireccion}
+          onLayout={onCapturarLayoutDerecha}
+        >
+          <Feather name="chevron-right" size={34} color="#1F2937" />
+        </View>
+      </View>
+
+      <View style={estilos.filaInferior}>
+        <View
+          style={estilos.botonDireccion}
+          onLayout={onCapturarLayoutAbajo}
+        >
+          <Feather name="chevron-down" size={34} color="#1F2937" />
+        </View>
       </View>
     </View>
-    <View style={estilos.filaCentro}>
-      <View style={estilos.botonDireccion} onLayout={onCapturarLayoutIzquierda}>
-        <Feather name="chevron-left" size={42} color={COLORES.TEXTO_CLARO} />
-      </View>
-      <View style={estilos.espacioVacio} />
-      <View style={estilos.botonDireccion} onLayout={onCapturarLayoutDerecha}>
-        <Feather name="chevron-right" size={42} color={COLORES.TEXTO_CLARO} />
-      </View>
-    </View>
-    <View style={estilos.fila}>
-      <View style={estilos.botonDireccion} onLayout={onCapturarLayoutAbajo}>
-        <Feather name="chevron-down" size={42} color={COLORES.TEXTO_CLARO} />
-      </View>
-    </View>
-  </View>
-);
+  );
+};
 
 const estilos = StyleSheet.create({
-  contenedor: { alignItems: "center", justifyContent: "center", opacity: 0.8 },
-  fila: { flexDirection: "row", justifyContent: "center" },
-  filaCentro: { flexDirection: "row", alignItems: "center" },
-  botonDireccion: {
-    width: 65,
-    height: 65,
-    backgroundColor: COLORES.DPAD_FONDO,
+  dpad: {
     justifyContent: "center",
     alignItems: "center",
-    margin: 2,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: COLORES.DPAD_BORDE,
   },
-  espacioVacio: { width: 65, height: 65, margin: 2 },
+
+  filaSuperior: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
+  filaCentral: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  filaInferior: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
+  botonDireccion: {
+    width: 70,
+    height: 70,
+    margin: 3,
+    borderRadius: 18,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#D8DEE5",
+
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+    elevation: 4,
+  },
+
+  centro: {
+    width: 70,
+    height: 70,
+    margin: 3,
+  },
 });
 
 export default DPadDeMovimiento;
