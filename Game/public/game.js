@@ -4,10 +4,10 @@ const CONFIG = {
   SALTO_FUERZA: 480,
   GRAVEDAD: 950,
   COLORES_JUGADORES: [
-    0xff5b5f,
-    0x56c596,
-    0x5b8def,
-    0xf4c95d,
+    0xe3555a,
+    0x4c9a6a,
+    0x3b6e8f,
+    0xe0a458,
   ],
   MAX_JUGADORES: 4,
   TIEMPO_VICTORIA: 2500,
@@ -98,110 +98,166 @@ class SceneGame extends Phaser.Scene {
     const ctx = canvas.context;
 
     if (key === "ground") {
-      ctx.fillStyle = "#725449";
+      // Piso estilo tatami (paja tejida)
+      ctx.fillStyle = "#C9A467";
       ctx.fillRect(0, 0, w, h);
 
-      ctx.fillStyle = "#79C267";
-      ctx.fillRect(0, 0, w, 11);
+      ctx.fillStyle = "#DDBB7E";
+      ctx.fillRect(0, 0, w, 6);
 
-      ctx.fillStyle = "#B5E274";
-      ctx.fillRect(0, 0, w, 4);
+      ctx.fillStyle = "#2F4F3E";
+      ctx.fillRect(0, 6, w, 4);
 
-      ctx.fillStyle = "rgba(255,255,255,0.08)";
-      ctx.fillRect(6, 20, 10, 3);
-      ctx.fillRect(30, 30, 7, 3);
-      ctx.fillRect(18, 42, 13, 3);
+      ctx.strokeStyle = "rgba(90,60,20,0.35)";
+      ctx.lineWidth = 1;
+      for (let i = 16; i < h; i += 7) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(w, i);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = "rgba(60,40,15,0.4)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.5, 10);
+      ctx.lineTo(w * 0.5, h);
+      ctx.stroke();
     }
 
     else if (key === "water") {
-      ctx.fillStyle = "#39A9E8";
+      // Estanque de koi con hojas de loto
+      ctx.fillStyle = "#2F7CB0";
       ctx.fillRect(0, 0, w, h);
 
-      ctx.fillStyle = "#79D4F2";
+      ctx.fillStyle = "#5FB0DB";
       ctx.fillRect(0, 0, w, 8);
 
-      ctx.fillStyle = "rgba(255,255,255,0.35)";
+      ctx.fillStyle = "rgba(255,255,255,0.3)";
       ctx.fillRect(7, 14, 16, 3);
-      ctx.fillRect(32, 26, 11, 3);
-      ctx.fillRect(16, 40, 14, 3);
+      ctx.fillRect(32, 28, 11, 3);
+
+      ctx.fillStyle = "#3E8E5A";
+      ctx.beginPath();
+      ctx.arc(31, 15, 7, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#F19EC2";
+      ctx.beginPath();
+      ctx.arc(12, 35, 3.5, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     else if (key === "door") {
-      ctx.fillStyle = "#3E302B";
-      ctx.fillRect(4, 3, 42, 77);
+      // Torii (puerta sagrada) cerrado
+      ctx.fillStyle = "#B33B2C";
+      ctx.fillRect(6, 18, 8, 62);
+      ctx.fillRect(36, 18, 8, 62);
 
-      ctx.fillStyle = "#7B5647";
-      ctx.fillRect(9, 8, 32, 70);
+      ctx.fillStyle = "#B33B2C";
+      ctx.fillRect(0, 6, 50, 10);
+      ctx.fillStyle = "#8E2E22";
+      ctx.fillRect(0, 14, 50, 4);
 
-      ctx.fillStyle = "#A97559";
-      ctx.fillRect(13, 12, 24, 62);
+      ctx.fillStyle = "#8E2E22";
+      ctx.fillRect(4, 26, 42, 6);
 
-      ctx.fillStyle = "#F2C94C";
-      ctx.fillRect(31, 43, 6, 6);
+      ctx.fillStyle = "#1C1A17";
+      ctx.fillRect(0, 4, 9, 5);
+      ctx.fillRect(41, 4, 9, 5);
 
-      ctx.fillStyle = "#FFF0A3";
-      ctx.fillRect(33, 44, 2, 2);
+      ctx.fillStyle = "#E8C158";
+      ctx.fillRect(20, 30, 10, 8);
+      ctx.fillStyle = "#8E2E22";
+      ctx.fillRect(22, 32, 6, 4);
     }
 
     else if (key === "doorOpen") {
-      ctx.fillStyle = "#3E302B";
-      ctx.fillRect(4, 3, 42, 77);
+      // Torii con el portal iluminado (llave usada)
+      ctx.fillStyle = "#B33B2C";
+      ctx.fillRect(6, 18, 8, 62);
+      ctx.fillRect(36, 18, 8, 62);
 
-      ctx.fillStyle = "#151A20";
-      ctx.fillRect(9, 8, 32, 70);
+      ctx.fillStyle = "#B33B2C";
+      ctx.fillRect(0, 6, 50, 10);
+      ctx.fillStyle = "#8E2E22";
+      ctx.fillRect(0, 14, 50, 4);
 
-      ctx.fillStyle = "#222B34";
-      ctx.fillRect(12, 12, 26, 4);
+      ctx.fillStyle = "#8E2E22";
+      ctx.fillRect(4, 26, 42, 6);
 
-      ctx.fillStyle = "#05070A";
-      ctx.fillRect(12, 20, 26, 50);
+      ctx.fillStyle = "#1C1A17";
+      ctx.fillRect(0, 4, 9, 5);
+      ctx.fillRect(41, 4, 9, 5);
 
-      ctx.fillStyle = "rgba(91, 141, 239, 0.25)";
-      ctx.fillRect(12, 20, 26, 5);
+      const brillo = ctx.createLinearGradient(14, 32, 14, 80);
+      brillo.addColorStop(0, "rgba(255,244,200,0.95)");
+      brillo.addColorStop(1, "rgba(255,200,120,0.15)");
+      ctx.fillStyle = brillo;
+      ctx.fillRect(14, 32, 22, 48);
+
+      ctx.fillStyle = "#FFF7DD";
+      ctx.fillRect(20, 30, 10, 8);
     }
 
     else if (key === "button") {
-      ctx.fillStyle = "#8C2020";
-      ctx.fillRect(5, 40, 40, 10);
+      // Farol de piedra (toro) que se enciende al pisarlo
+      ctx.fillStyle = "#7C8590";
+      ctx.fillRect(10, 42, 30, 8);
 
-      ctx.fillStyle = "#FF5A5F";
-      ctx.fillRect(10, 35, 30, 5);
+      ctx.fillStyle = "#9AA4AE";
+      ctx.fillRect(14, 30, 22, 14);
 
-      ctx.fillStyle = "#FF9A9D";
-      ctx.fillRect(13, 35, 24, 2);
+      ctx.fillStyle = "#F2A93C";
+      ctx.fillRect(19, 33, 12, 8);
+
+      ctx.fillStyle = "#5C6773";
+      ctx.fillRect(11, 26, 28, 5);
     }
 
     else if (key === "bridge") {
-      ctx.fillStyle = "#B46C22";
+      // Puente laqueado rojo (taikobashi)
+      ctx.fillStyle = "#9C2B22";
       ctx.fillRect(0, 0, w, h);
 
-      ctx.fillStyle = "#F0B640";
-      ctx.fillRect(2, 2, w - 4, 16);
+      ctx.fillStyle = "#C8402F";
+      ctx.fillRect(2, 2, w - 4, 14);
 
-      ctx.fillStyle = "#FFE18C";
-      ctx.fillRect(5, 5, w - 10, 4);
+      ctx.fillStyle = "#E97A5C";
+      ctx.fillRect(5, 4, w - 10, 3);
 
-      ctx.fillStyle = "rgba(80,45,20,0.3)";
+      ctx.fillStyle = "#1C1A17";
+      ctx.fillRect(2, 0, 3, 8);
+      ctx.fillRect(w - 5, 0, 3, 8);
+      ctx.fillRect(23, 0, 4, 8);
+
+      ctx.fillStyle = "rgba(60,15,10,0.35)";
       ctx.fillRect(8, 12, 3, 5);
       ctx.fillRect(24, 12, 3, 5);
       ctx.fillRect(40, 12, 3, 5);
     }
 
     else if (key === "trampoline") {
-      ctx.fillStyle = "#4B5563";
+      // Tambor taiko como lanzador
+      ctx.fillStyle = "#7A3B1E";
       ctx.fillRect(5, 30, 40, 20);
 
-      ctx.fillStyle = "#2563EB";
-      ctx.fillRect(10, 25, 30, 5);
+      ctx.fillStyle = "#C0392B";
+      ctx.fillRect(8, 24, 34, 8);
 
-      ctx.fillStyle = "#7DB3FF";
-      ctx.fillRect(12, 25, 26, 3);
+      ctx.fillStyle = "#E8746A";
+      ctx.fillRect(10, 25, 30, 3);
 
-      ctx.fillStyle = "#193C91";
-      ctx.fillRect(10, 29, 30, 2);
+      ctx.strokeStyle = "#E8C158";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(8, 24, 34, 8);
+
+      ctx.fillStyle = "#3A1D10";
+      ctx.fillRect(10, 32, 30, 2);
     }
 
     else if (key === "cloud") {
+      // Nube estilo ukiyo-e
       ctx.fillStyle = "#FFFFFF";
 
       ctx.beginPath();
@@ -210,58 +266,63 @@ class SceneGame extends Phaser.Scene {
       ctx.arc(38, 32, 12, 0, Math.PI * 2);
       ctx.fill();
 
+      ctx.strokeStyle = "rgba(120,150,180,0.4)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(25, 26, 6, 0, Math.PI * 1.5);
+      ctx.stroke();
+
       ctx.fillStyle = "rgba(180,205,220,0.3)";
       ctx.fillRect(10, 38, 30, 3);
     }
 
     else if (key === "weightplate") {
-      ctx.fillStyle = "#166534";
+      // Placa de piedra con sello (hanko)
+      ctx.fillStyle = "#5C6773";
       ctx.fillRect(4, 38, 42, 12);
 
-      ctx.fillStyle = "#22C55E";
+      ctx.fillStyle = "#7C8590";
       ctx.fillRect(8, 33, 34, 7);
 
-      ctx.fillStyle = "#86EFAC";
+      ctx.fillStyle = "#9AA4AE";
       ctx.fillRect(10, 34, 30, 2);
 
-      ctx.fillStyle = "#14532D";
-
+      ctx.fillStyle = "#B33B2C";
       ctx.beginPath();
-      ctx.arc(19, 36, 3, 0, Math.PI * 2);
-      ctx.arc(31, 36, 3, 0, Math.PI * 2);
+      ctx.arc(25, 36, 4, 0, Math.PI * 2);
       ctx.fill();
     }
 
     else if (key === "box") {
+      // Barril de madera con bandas doradas
       ctx.fillStyle = "#8B5A2B";
       ctx.fillRect(3, 8, 44, 40);
 
       ctx.fillStyle = "#B87935";
       ctx.fillRect(3, 8, 44, 8);
 
-      ctx.strokeStyle = "#56351B";
+      ctx.strokeStyle = "#3E2712";
       ctx.lineWidth = 3;
       ctx.strokeRect(3, 8, 44, 40);
 
+      ctx.strokeStyle = "#E8C158";
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(3, 8);
-      ctx.lineTo(47, 48);
-      ctx.moveTo(47, 8);
-      ctx.lineTo(3, 48);
+      ctx.moveTo(3, 18);
+      ctx.lineTo(47, 18);
+      ctx.moveTo(3, 38);
+      ctx.lineTo(47, 38);
       ctx.stroke();
 
-      ctx.fillStyle = "#D49A55";
-      ctx.fillRect(7, 12, 8, 4);
-
-      ctx.strokeStyle = "#56351B";
-      ctx.lineWidth = 3;
-
+      ctx.fillStyle = "#B33B2C";
       ctx.beginPath();
-      ctx.moveTo(25, 0);
-      ctx.lineTo(25, 8);
-      ctx.moveTo(19, 2);
-      ctx.lineTo(31, 2);
-      ctx.stroke();
+      ctx.arc(25, 28, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#F2E4C4";
+      ctx.font = "bold 8px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("米", 25, 31);
     }
 
     else {
@@ -278,11 +339,27 @@ class SceneGame extends Phaser.Scene {
     const canvas = this.textures.createCanvas("player", 40, 40);
     const ctx = canvas.context;
 
+    // Máscara de zorro (kitsune)
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(3, 5, 34, 32);
 
-    ctx.fillStyle = "#F3F4F6";
+    ctx.fillStyle = "#F8F0E3";
     ctx.fillRect(7, 9, 26, 24);
+
+    ctx.fillStyle = "#C0392B";
+    ctx.beginPath();
+    ctx.moveTo(9, 24);
+    ctx.lineTo(14, 21);
+    ctx.lineTo(14, 27);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(31, 24);
+    ctx.lineTo(26, 21);
+    ctx.lineTo(26, 27);
+    ctx.closePath();
+    ctx.fill();
 
     ctx.fillStyle = "#111827";
     ctx.fillRect(9, 11, 6, 7);
@@ -290,8 +367,19 @@ class SceneGame extends Phaser.Scene {
     ctx.fillRect(15, 25, 10, 4);
 
     ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(4, 2, 6, 6);
-    ctx.fillRect(30, 2, 6, 6);
+    ctx.beginPath();
+    ctx.moveTo(4, 8);
+    ctx.lineTo(10, 8);
+    ctx.lineTo(6, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(30, 8);
+    ctx.lineTo(36, 8);
+    ctx.lineTo(34, 0);
+    ctx.closePath();
+    ctx.fill();
 
     canvas.refresh();
   }
@@ -302,18 +390,28 @@ class SceneGame extends Phaser.Scene {
     const canvas = this.textures.createCanvas("key", 30, 30);
     const ctx = canvas.context;
 
-    ctx.fillStyle = "#D89B00";
-    ctx.fillRect(5, 10, 25, 8);
+    // Llave ornamental (kagi) con borla estilo omamori
+    ctx.strokeStyle = "#D89B00";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(10, 9, 6, 0, Math.PI * 2);
+    ctx.stroke();
 
     ctx.fillStyle = "#FFD84D";
-    ctx.fillRect(5, 5, 10, 18);
-
-    ctx.fillStyle = "#FFF1A8";
-    ctx.fillRect(7, 7, 5, 10);
+    ctx.beginPath();
+    ctx.arc(10, 9, 3, 0, Math.PI * 2);
+    ctx.fill();
 
     ctx.fillStyle = "#D89B00";
-    ctx.fillRect(22, 18, 4, 6);
-    ctx.fillRect(16, 18, 4, 6);
+    ctx.fillRect(9, 13, 3, 13);
+    ctx.fillRect(11, 20, 5, 3);
+    ctx.fillRect(11, 24, 4, 3);
+
+    ctx.fillStyle = "#B33B2C";
+    ctx.fillRect(6, 24, 3, 6);
+    ctx.beginPath();
+    ctx.arc(7.5, 30, 2, 0, Math.PI * 2);
+    ctx.fill();
 
     canvas.refresh();
   }
@@ -321,7 +419,7 @@ class SceneGame extends Phaser.Scene {
   create() {
     this.resetEstado();
 
-    this.cameras.main.setBackgroundColor("#BFE9FF");
+    this.cameras.main.setBackgroundColor("#F6D9C4");
 
     this.crearTextura("ground", null, null, null, 50, 50, false);
     this.crearTextura("water", null, null, null, 50, 50, false);
@@ -356,9 +454,9 @@ class SceneGame extends Phaser.Scene {
     this.add
       .text(20, 20, `NIVEL ${nivelActual}`, {
         fontSize: "20px",
-        color: "#16324F",
+        color: "#7A1F1A",
         fontStyle: "bold",
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#F2E4C4",
         padding: {
           left: 12,
           right: 12,
@@ -375,9 +473,9 @@ class SceneGame extends Phaser.Scene {
         color: "#FFFFFF",
         fontStyle: "bold",
         align: "center",
-        stroke: "#17324D",
+        stroke: "#5C1712",
         strokeThickness: 8,
-        backgroundColor: "#2563EB",
+        backgroundColor: "#B33B2C",
         padding: {
           left: 26,
           right: 26,
@@ -840,8 +938,8 @@ class SceneGame extends Phaser.Scene {
     const msj =
       nivelActual <
       CONFIG.TOTAL_NIVELES
-        ? `¡NIVEL ${nivelActual} COMPLETADO!\nSiguiente nivel...`
-        : `¡JUEGO COMPLETADO! 🎉`;
+        ? `⛩️ ¡NIVEL ${nivelActual} SUPERADO! ⛩️\nCruzando el torii hacia el siguiente templo...`
+        : `🏯 ¡HAS COMPLETADO EL VIAJE! 🏯\nTodo el equipo alcanzó el santuario`;
 
     this.txtVictoria
       .setText(msj)
